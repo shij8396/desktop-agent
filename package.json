@@ -1,0 +1,32 @@
+{
+  "name": "rag-agent",
+  "version": "0.1.0",
+  "description": "Personal knowledge base Q&A agent with RAG",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "serve": "tsx src/server.ts",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@hono/node-server": "^2.0.2",
+    "dotenv": "^17.4.2",
+    "hono": "^4.12.18",
+    "mammoth": "^1.12.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.1",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.5"
+  }
+}

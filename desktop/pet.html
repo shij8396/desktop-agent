@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>RAG Pet - Pet</title>
+  <link rel="stylesheet" href="pet.css" />
+</head>
+<body class="pet-window">
+  <canvas id="pet-canvas" width="180" height="300"></canvas>
+  <div id="speech-bubble" class="speech-bubble hidden">
+    <span id="bubble-text"></span>
+  </div>
+  <div id="context-menu" class="context-menu hidden">
+    <div class="context-menu-item" data-action="toggle-chat">打开/收起聊天</div>
+    <div class="context-menu-item danger" data-action="close">退出</div>
+  </div>
+  <script src="character-runtime.js"></script>
+  <script src="emotion-state.js"></script>
+  <script src="desktop-behavior.js"></script>
+  <script src="sprite-manager.js"></script>
+  <script src="character-sprites.js"></script>
+  <script src="sprite-renderer.js"></script>
+  <script src="live2d-renderer.js"></script>
+  <script src="renderer-factory.js"></script>
+  <script src="context-menu.js"></script>
+  <script src="pet-window.js"></script>
+</body>
+</html>

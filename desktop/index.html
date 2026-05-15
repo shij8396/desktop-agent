@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>RAG Pet</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app" class="standalone">
+    <div id="chat">
+      <div id="header" data-tauri-drag-region>
+        <span>RAG 助手</span>
+        <button id="hide-btn" title="收起">×</button>
+      </div>
+      <div id="status-bar">
+        <span class="dot connecting" id="status-dot"></span>
+        <span id="status-text">连接中...</span>
+      </div>
+      <div id="messages"></div>
+      <div id="input-area">
+        <textarea id="input" placeholder="输入问题..." rows="1"></textarea>
+        <button id="send-btn" title="发送">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

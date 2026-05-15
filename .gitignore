@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.js.map
+
+# Runtime data (auto-created)
+data/
+chat-history/
+
+# Environment
+.env
+
+# Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Local documents and screenshots
+*.docx
+build_*_doc.py
+故障图片/
+人物图片/
+docx-render/
+docx-render-current/
+
+# Claude Code
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+desktop/tmp*.js
