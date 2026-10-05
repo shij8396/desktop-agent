@@ -2,27 +2,190 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>RAG Pet - Pet</title>
-  <link rel="stylesheet" href="pet.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desktop Assistant</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="assistant.css?v=6" />
+  <link rel="stylesheet" href="vendor/phosphor.css?v=1" />
+  <link rel="stylesheet" href="assistant-light.css?v=3" />
+  <script>
+    if (window.location.protocol === 'file:') {
+      window.location.replace('http://127.0.0.1:3000/pet.html');
+    }
+  </script>
 </head>
-<body class="pet-window">
-  <canvas id="pet-canvas" width="180" height="300"></canvas>
-  <div id="speech-bubble" class="speech-bubble hidden">
-    <span id="bubble-text"></span>
-  </div>
-  <div id="context-menu" class="context-menu hidden">
-    <div class="context-menu-item" data-action="toggle-chat">打开/收起聊天</div>
-    <div class="context-menu-item danger" data-action="close">退出</div>
-  </div>
-  <script src="character-runtime.js"></script>
-  <script src="emotion-state.js"></script>
-  <script src="desktop-behavior.js"></script>
-  <script src="sprite-manager.js"></script>
-  <script src="character-sprites.js"></script>
-  <script src="sprite-renderer.js"></script>
-  <script src="live2d-renderer.js"></script>
-  <script src="renderer-factory.js"></script>
-  <script src="context-menu.js"></script>
-  <script src="pet-window.js"></script>
+<body>
+  <main class="assistant-shell">
+    <header class="app-header">
+      <div class="brand-block">
+        <div class="title-row">
+          <h1>桌面智能助手</h1>
+          <span id="connection-badge" class="connection-badge connecting">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="assistant-status">正在连接</span>
+          </span>
+        </div>
+      </div>
+      <nav class="header-actions" aria-label="应用操作">
+        <button id="task-panel-button" type="button" aria-expanded="false" aria-controls="task-panel"><i class="ph ph-clipboard-text" aria-hidden="true"></i><span id="task-panel-button-label">任务中心</span></button>
+        <button id="settings-button" type="button"><i class="ph ph-gear" aria-hidden="true"></i><span>设置</span></button>
+      </nav>
+    </header>
+
+    <div class="workspace task-panel-hidden">
+      <section class="conversation" aria-label="与桌面助手对话">
+        <section id="messages" class="messages" aria-live="polite">
+          <div id="welcome-state" class="welcome-state">
+            <p class="welcome-kicker">一句话交给我，过程始终可见、可停、可确认</p>
+            <h2>今天想让我帮你完成什么？</h2>
+            <p class="welcome-copy">我可以检索知识、分析文档，也能在你授权后操作文件和桌面。</p>
+            <div class="quick-actions" aria-label="常用任务">
+              <button type="button" data-prompt="帮我看看桌面上有哪些文件，并按类型做个概览">整理桌面文件<span>扫描并分类</span></button>
+              <button type="button" data-prompt="分析我指定的文档，并提炼重点和待办事项">总结一个文档<span>提炼重点</span></button>
+              <button type="button" data-prompt="检查电脑的磁盘、CPU、内存和网络状态">检查电脑状态<span>生成状态摘要</span></button>
+              <button type="button" data-prompt="请做一次多来源深度调研，并给出有依据的结论">进行深度调研<span>启用复杂任务模式</span></button>
+            </div>
+          </div>
+        </section>
+
+        <div id="compact-task" class="compact-task" hidden>
+          <i class="ph ph-spinner" aria-hidden="true"></i>
+          <div class="compact-task-copy">
+            <strong id="compact-task-title">正在规划任务…</strong>
+            <span id="compact-task-detail">执行过程会显示在任务中心</span>
+          </div>
+          <div id="compact-task-progress" class="compact-task-progress" role="progressbar" aria-label="任务进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="compact-task-progress-fill"></span></div>
+          <button id="compact-task-open" type="button">查看任务<i class="ph ph-caret-right" aria-hidden="true"></i></button>
+        </div>
+
+        <form id="chat-form" class="chat-form">
+          <label class="sr-only" for="chat-input">输入问题或桌面任务</label>
+          <textarea id="chat-input" rows="1" maxlength="4000" placeholder="描述你想完成的任务…"></textarea>
+          <div class="composer-footer">
+            <div class="composer-meta">
+              <span id="mode-indicator">智能执行</span>
+              <span id="input-count">0 / 4000</span>
+            </div>
+          <div class="composer-actions">
+              <button id="mic-button" type="button" title="开始语音输入；再次点击结束并发送" hidden><i class="ph ph-microphone" aria-hidden="true"></i><span class="button-label">语音</span></button>
+              <button id="send-button" type="submit" class="primary"><i class="ph ph-paper-plane-right" aria-hidden="true"></i><span class="button-label">发送</span></button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <aside id="task-panel" class="task-panel" aria-label="任务中心" aria-hidden="true" inert>
+        <header class="task-panel-header">
+          <div>
+            <p class="eyebrow">TASK CONTROL</p>
+            <h2>任务中心</h2>
+          </div>
+          <button id="task-panel-close" class="panel-close" type="button" aria-label="关闭任务中心">×</button>
+        </header>
+
+        <section id="task-summary" class="task-summary idle">
+          <div class="task-summary-row">
+            <span id="task-status-label">等待任务</span>
+            <span id="task-step-count">0 步</span>
+          </div>
+          <p id="task-request">发送任务后，执行计划会显示在这里。</p>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-heading">
+            <h3>执行计划</h3>
+            <span id="task-progress-text">尚未开始</span>
+          </div>
+          <ol id="task-steps" class="task-steps">
+            <li class="empty-panel-state">复杂任务会被拆成可跟踪的步骤。</li>
+          </ol>
+        </section>
+
+        <section class="panel-section approvals-section">
+          <div class="section-heading">
+            <h3>等待确认</h3>
+            <span id="approval-count">0</span>
+          </div>
+          <div id="approval-list" class="approval-list">
+            <p class="empty-panel-state">高风险操作会在这里请求确认。</p>
+          </div>
+          <div id="desktop-approval-list" class="approval-list"></div>
+        </section>
+
+        <section class="panel-section activity-section">
+          <div class="section-heading"><h3>最近活动</h3></div>
+          <div id="activity-list" class="activity-list">
+            <p class="empty-panel-state">工具调用与结果会记录在这里。</p>
+          </div>
+        </section>
+        <aside id="agent-flow" class="agent-flow hidden" aria-live="polite" aria-label="Agent 实时活动">
+          <div class="flow-header"><span>实时活动</span><span class="flow-pulse" aria-hidden="true"></span></div>
+          <div id="agent-flow-items"></div>
+        </aside>
+      </aside>
+    </div>
+  </main>
+
+  <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+  <aside id="settings-drawer" class="settings-drawer" aria-hidden="true" aria-labelledby="settings-title" inert>
+    <header>
+      <div><p class="eyebrow">CONFIGURATION</p><h2 id="settings-title">设置</h2></div>
+      <button id="settings-close" type="button" aria-label="关闭设置">×</button>
+    </header>
+    <div class="settings-body">
+      <section>
+        <div class="settings-section-title"><h3>模型连接</h3><span>必需</span></div>
+        <div class="provider-tabs" role="tablist" aria-label="模型提供商">
+          <button type="button" data-provider="deepseek" class="active" role="tab">DeepSeek</button>
+          <button type="button" data-provider="openai" role="tab">OpenAI</button>
+        </div>
+        <label>API Key<input id="settings-api-key" type="password" autocomplete="off" placeholder="仅保存在本机" /></label>
+        <label>Base URL<input id="settings-base-url" type="text" /></label>
+        <label>Model<input id="settings-model" type="text" /></label>
+      </section>
+      <section>
+        <div class="settings-section-title"><h3>本机权限</h3><span>按需授权</span></div>
+        <label class="toggle"><input id="settings-desktop-access" type="checkbox" /><span><strong>文件与磁盘</strong><small>读取授权目录和磁盘信息</small></span></label>
+        <label class="toggle"><input id="settings-screen-capture" type="checkbox" /><span><strong>屏幕感知</strong><small>仅在任务需要时截取屏幕</small></span></label>
+        <label class="toggle"><input id="settings-input-control" type="checkbox" /><span><strong>桌面控制</strong><small>窗口、键鼠、剪贴板和多媒体</small></span></label>
+        <label>信任文件夹（每行一个路径）<textarea id="settings-trusted-folders" rows="3" placeholder="D:\Documents"></textarea></label>
+      </section>
+      <section>
+        <div class="settings-section-title"><h3>语音与主动能力</h3><span>可选</span></div>
+        <label class="toggle"><input id="settings-voice-enabled" type="checkbox" /><span><strong>语音交互</strong><small>默认关闭；开启后显示麦克风并允许答案播报，切换立即保存</small></span></label>
+        <label>播报音色
+          <select id="settings-voice-tone">
+            <option value="male-warm">温暖男声</option>
+            <option value="female-calm">柔和女声</option>
+            <option value="male-low">沉稳男声</option>
+          </select>
+        </label>
+        <label class="toggle"><input id="settings-proactive-care" type="checkbox" checked /><span><strong>主动提醒</strong><small>提醒待办、异常与长时间工作</small></span></label>
+        <label class="toggle"><input id="settings-proactive-vision" type="checkbox" /><span><strong>周期屏幕感知</strong><small>定期分析屏幕异常，需要额外授权</small></span></label>
+        <label class="toggle"><input id="settings-dnd-mode" type="checkbox" /><span><strong>勿扰模式</strong><small>只保留重要任务状态</small></span></label>
+      </section>
+      <section>
+        <div class="settings-section-title"><h3>本地知识库</h3><button id="knowledge-refresh" type="button">刷新</button></div>
+        <div id="knowledge-status" class="memory-list" aria-live="polite">打开设置后加载…</div>
+      </section>
+      <section>
+        <div class="settings-section-title"><h3>已保存的记忆与画像</h3><button id="memory-refresh" type="button">刷新</button></div>
+        <p class="memory-note">可逐条查看、修改或删除。删除后不会再用于后续回答。</p>
+        <div id="memory-list" class="memory-list" aria-live="polite">打开设置后加载…</div>
+      </section>
+      <div class="settings-actions">
+        <button id="settings-save" type="button" class="primary">保存设置</button>
+        <button id="settings-clear" type="button">清除模型配置</button>
+      </div>
+      <p id="settings-hint" role="status"></p>
+    </div>
+  </aside>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script src="shared.js?v=5"></script>
+  <script src="voice.js?v=10"></script>
+  <script src="voice-transcript.js?v=1"></script>
+  <script src="voice-preference.js?v=1"></script>
+  <script src="assistant-window.js?v=16"></script>
 </body>
 </html>

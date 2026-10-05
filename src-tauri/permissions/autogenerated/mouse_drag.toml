@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-mouse-drag"
+description = "Enables the mouse_drag command without any pre-configured scope."
+commands.allow = ["mouse_drag"]
+
+[[permission]]
+identifier = "deny-mouse-drag"
+description = "Denies the mouse_drag command without any pre-configured scope."
+commands.deny = ["mouse_drag"]

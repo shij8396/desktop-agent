@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-scan-desktop-files"
+description = "Enables the scan_desktop_files command without any pre-configured scope."
+commands.allow = ["scan_desktop_files"]
+
+[[permission]]
+identifier = "deny-scan-desktop-files"
+description = "Denies the scan_desktop_files command without any pre-configured scope."
+commands.deny = ["scan_desktop_files"]

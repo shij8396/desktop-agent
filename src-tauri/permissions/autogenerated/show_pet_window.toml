@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-show-pet-window"
+description = "Enables the show_pet_window command without any pre-configured scope."
+commands.allow = ["show_pet_window"]
+
+[[permission]]
+identifier = "deny-show-pet-window"
+description = "Denies the show_pet_window command without any pre-configured scope."
+commands.deny = ["show_pet_window"]

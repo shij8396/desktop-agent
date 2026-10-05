@@ -1,0 +1,26 @@
+/* Selected glyphs from Phosphor Icons regular (MIT); see PHOSPHOR-LICENSE.txt. */
+@font-face {
+  font-family: "Phosphor";
+  src: url("./Phosphor.woff2") format("woff2");
+  font-style: normal;
+  font-weight: normal;
+  font-display: block;
+}
+.ph {
+  font-family: "Phosphor" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+.ph-caret-right::before { content: "\e13a"; }
+.ph-clipboard-text::before { content: "\e198"; }
+.ph-gear::before { content: "\e270"; }
+.ph-microphone::before { content: "\e326"; }
+.ph-paper-plane-right::before { content: "\e396"; }
+.ph-sparkle::before { content: "\e6a2"; }
+.ph-spinner::before { content: "\e66a"; }
+.ph-x::before { content: "\e4f6"; }

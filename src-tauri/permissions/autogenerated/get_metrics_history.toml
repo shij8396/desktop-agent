@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-get-metrics-history"
+description = "Enables the get_metrics_history command without any pre-configured scope."
+commands.allow = ["get_metrics_history"]
+
+[[permission]]
+identifier = "deny-get-metrics-history"
+description = "Denies the get_metrics_history command without any pre-configured scope."
+commands.deny = ["get_metrics_history"]

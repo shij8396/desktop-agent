@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-get-window-rect"
+description = "Enables the get_window_rect command without any pre-configured scope."
+commands.allow = ["get_window_rect"]
+
+[[permission]]
+identifier = "deny-get-window-rect"
+description = "Denies the get_window_rect command without any pre-configured scope."
+commands.deny = ["get_window_rect"]

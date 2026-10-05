@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-set-monitoring-paused"
+description = "Enables the set_monitoring_paused command without any pre-configured scope."
+commands.allow = ["set_monitoring_paused"]
+
+[[permission]]
+identifier = "deny-set-monitoring-paused"
+description = "Denies the set_monitoring_paused command without any pre-configured scope."
+commands.deny = ["set_monitoring_paused"]

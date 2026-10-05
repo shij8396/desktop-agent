@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-get-work-area"
+description = "Enables the get_work_area command without any pre-configured scope."
+commands.allow = ["get_work_area"]
+
+[[permission]]
+identifier = "deny-get-work-area"
+description = "Denies the get_work_area command without any pre-configured scope."
+commands.deny = ["get_work_area"]

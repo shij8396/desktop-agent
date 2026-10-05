@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-mouse-double-click"
+description = "Enables the mouse_double_click command without any pre-configured scope."
+commands.allow = ["mouse_double_click"]
+
+[[permission]]
+identifier = "deny-mouse-double-click"
+description = "Denies the mouse_double_click command without any pre-configured scope."
+commands.deny = ["mouse_double_click"]

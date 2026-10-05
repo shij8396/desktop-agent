@@ -119,17 +119,12 @@ async function duckDuckGoSearch(query: string, maxResults: number): Promise<WebR
   }
 }
 
-// Dual-engine search orchestrator
-export async function webSearch(query: string, maxResults: number = 5): Promise<WebResult[]> {
+// Single search attempt across configured engine(s)
+async function searchOnce(query: string, maxResults: number): Promise<WebResult[]> {
   const engine = config.searchEngine
 
-  if (engine === 'bing') {
-    return bingSearch(query, maxResults)
-  }
-
-  if (engine === 'duckduckgo') {
-    return duckDuckGoSearch(query, maxResults)
-  }
+  if (engine === 'bing') return bingSearch(query, maxResults)
+  if (engine === 'duckduckgo') return duckDuckGoSearch(query, maxResults)
 
   // auto mode: Bing first, DDG fallback
   const bingResults = await bingSearch(query, maxResults)
@@ -137,14 +132,37 @@ export async function webSearch(query: string, maxResults: number = 5): Promise<
     log.debug('Search completed', { engine: 'bing', results: bingResults.length })
     return bingResults
   }
-
   log.info('Bing returned 0 results, falling back to DuckDuckGo')
   const ddgResults = await duckDuckGoSearch(query, maxResults)
   log.debug('Search completed', { engine: 'duckduckgo', results: ddgResults.length })
   return ddgResults
 }
 
-// Fetch a URL and extract its text content
+/**
+ * Dual-engine search orchestrator with one retry on empty results.
+ * Retry logic: if the first attempt yields 0 results, wait 1.5s and retry
+ * once with a slightly different query format (quotes stripped, etc).
+ */
+export async function webSearch(query: string, maxResults: number = 5): Promise<WebResult[]> {
+  let results = await searchOnce(query, maxResults)
+  if (results.length > 0) return results
+
+  // Retry once after a short delay with a normalized query
+  log.info('First search attempt returned 0 results, retrying once')
+  await new Promise(resolve => setTimeout(resolve, 1500))
+  const normalized = query.replace(/["'"']+}/g, '').replace(/\s+/g, ' ').trim()
+  results = await searchOnce(normalized, maxResults)
+  if (results.length === 0) {
+    log.warn('Search returned 0 results after retry', { query })
+  }
+  return results
+}
+
+/**
+ * Fetch a URL and extract its text content. Strips HTML, normalizes
+ * whitespace, and truncates to maxChars. Used by fetch_webpage tool for
+ * content summarization.
+ */
 export async function fetchUrl(url: string, maxChars: number = 3000): Promise<string> {
   try {
     const res = await fetch(url, {
@@ -162,6 +180,29 @@ export async function fetchUrl(url: string, maxChars: number = 3000): Promise<st
     return text.slice(0, maxChars)
   } catch (error) {
     return `Fetch failed: ${error instanceof Error ? error.message : error}`
+  }
+}
+
+/**
+ * Query weather via wttr.in (free, no API key required).
+ * Accepts a location string (city name, airport code, or coordinates).
+ * Returns a concise text summary suitable for the LLM to format.
+ */
+export async function getWeather(location: string, format: string = '4'): Promise<string> {
+  try {
+    const url = `https://wttr.in/${encodeURIComponent(location)}?format=${encodeURIComponent(format)}&lang=zh`
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) curl/8.0',
+        'Accept': 'text/plain',
+      },
+      signal: AbortSignal.timeout(8000),
+    })
+    if (!res.ok) return `天气查询失败: HTTP ${res.status}`
+    const text = await res.text()
+    return text.trim().slice(0, 800)
+  } catch (error) {
+    return `天气查询失败: ${error instanceof Error ? error.message : error}`
   }
 }
 

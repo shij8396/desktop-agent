@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
-  "productName": "RAG Pet",
+  "productName": "Desktop Assistant",
   "version": "0.1.0",
-  "identifier": "com.rag-pet.app",
+  "identifier": "com.ragpet.desktop",
   "build": {
     "frontendDist": "../desktop",
     "beforeDevCommand": "",
@@ -12,35 +12,24 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "label": "main",
-        "title": "RAG Chat",
-        "url": "index.html",
-        "width": 360,
-        "height": 520,
-        "resizable": true,
-        "transparent": true,
-        "decorations": false,
-        "alwaysOnTop": true,
-        "skipTaskbar": true,
-        "shadow": false
-      },
-      {
         "label": "pet",
-        "title": "RAG Pet",
-        "url": "pet.html",
-        "width": 180,
-        "height": 300,
-        "resizable": false,
+        "title": "Desktop Assistant",
+        "url": "http://127.0.0.1:3000/pet.html",
+        "width": 960,
+        "height": 680,
+        "minWidth": 620,
+        "minHeight": 500,
+        "resizable": true,
         "transparent": false,
-        "backgroundColor": "#1a1e2e",
-        "decorations": false,
-        "alwaysOnTop": true,
-        "skipTaskbar": true,
-        "shadow": false
+        "decorations": true,
+        "alwaysOnTop": false,
+        "skipTaskbar": false,
+        "shadow": true,
+        "visible": true
       }
     ],
     "security": {
-      "csp": "default-src * 'unsafe-inline' 'unsafe-eval'; connect-src *;"
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'self' http://127.0.0.1:3000; script-src 'self' 'unsafe-inline'; worker-src 'self' blob:"
     }
   },
   "bundle": {

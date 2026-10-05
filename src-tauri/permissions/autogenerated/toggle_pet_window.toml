@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-toggle-pet-window"
+description = "Enables the toggle_pet_window command without any pre-configured scope."
+commands.allow = ["toggle_pet_window"]
+
+[[permission]]
+identifier = "deny-toggle-pet-window"
+description = "Denies the toggle_pet_window command without any pre-configured scope."
+commands.deny = ["toggle_pet_window"]

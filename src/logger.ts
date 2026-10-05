@@ -1,3 +1,7 @@
+import fs from 'node:fs'
+import path from 'node:path'
+import { config } from './config.js'
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 const LEVEL_PRIORITY: Record<LogLevel, number> = {
@@ -8,6 +12,15 @@ const LEVEL_PRIORITY: Record<LogLevel, number> = {
 }
 
 const globalLevel: LogLevel = (process.env.LOG_LEVEL as LogLevel) || 'info'
+
+function writeLogFile(line: string): void {
+  try {
+    fs.mkdirSync(config.logDir, { recursive: true })
+    fs.appendFileSync(path.join(config.logDir, 'rag-pet.log'), line + '\n', 'utf8')
+  } catch {
+    // Logging must not break chat or startup.
+  }
+}
 
 export function createLogger(module: string) {
   function log(level: LogLevel, message: string, ctx?: Record<string, unknown>): void {
@@ -22,6 +35,7 @@ export function createLogger(module: string) {
     }
 
     const line = JSON.stringify(entry)
+    writeLogFile(line)
     if (level === 'error') {
       process.stderr.write(line + '\n')
     } else {

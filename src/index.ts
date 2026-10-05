@@ -49,15 +49,13 @@ Commands:
   sessions          列出会话
   help              显示帮助
   exit              退出
-
-也可以直接输入问题开始对话。
-`)
+也可以直接输入问题开始对话。`)
 }
 
 async function main(): Promise<void> {
-  if (!config.anthropicApiKey) {
-    console.error('Error: ANTHROPIC_API_KEY environment variable is required.')
-    console.error('Create a .env file from .env.example and set ANTHROPIC_API_KEY.')
+  if (config.llmProvider === 'openai' && !config.openaiApiKey) {
+    console.error('Error: OPENAI_API_KEY environment variable is required.')
+    console.error('Create a .env file from .env.example and set OPENAI_API_KEY.')
     process.exit(1)
   }
 
@@ -122,8 +120,7 @@ async function main(): Promise<void> {
           }
           const keyword = args.join(' ')
           console.log('Searching knowledge base...')
-          const results = agent.searchKbDirect(keyword)
-          console.log(results)
+          console.log(agent.searchKbDirect(keyword))
           break
         }
 

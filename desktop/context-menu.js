@@ -1,9 +1,7 @@
 (function () {
   const menu = document.getElementById('context-menu');
   if (!menu) return;
-
-  function getInvoke() { return window.__TAURI__?.core?.invoke; }
-  function getEmit() { return window.__TAURI__?.event?.emit; }
+  const { getInvoke, getEmit } = window.AssistantShared || {};
 
   function showMenu(x, y) {
     menu.style.left = x + 'px';

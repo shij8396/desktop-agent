@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-press-keys"
+description = "Enables the press_keys command without any pre-configured scope."
+commands.allow = ["press_keys"]
+
+[[permission]]
+identifier = "deny-press-keys"
+description = "Denies the press_keys command without any pre-configured scope."
+commands.deny = ["press_keys"]

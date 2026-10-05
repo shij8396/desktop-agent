@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+.release/
 *.js.map
 
 # Runtime data (auto-created)
@@ -11,6 +12,8 @@ chat-history/
 
 # Environment
 .env
+.env.*
+!.env.example
 
 # Tauri
 src-tauri/target/
@@ -33,3 +36,19 @@ Thumbs.db
 
 # Temp files
 desktop/tmp*.js
+
+# Debug logs & screenshots
+*.log
+*screenshot*.png
+*.bmp
+.codex-run/
+cdp-response.txt
+__test_*.mjs
+
+# Local QA/diagnostic artifacts
+.artifacts/
+.trae/
+design-qa.md
+.qa-github/
+.qa-cdp/
+scripts/diag*.mts

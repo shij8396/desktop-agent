@@ -7,14 +7,45 @@ edition = "2021"
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["devtools"] }
+tauri = { version = "2", features = ["devtools", "tray-icon"] }
 tauri-plugin-shell = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-global-shortcut = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-screenshots = "0.8"
-base64 = "0.22"
-image = "0.24"
 tokio = { version = "1", features = ["time", "rt"] }
+rand = "0.8"
+sysinfo = "0.32"
+walkdir = "2"
+chrono = { version = "0.4", features = ["serde"] }
+dirs = "5"
+rusqlite = { version = "0.31", features = ["bundled"] }
+log = "0.4"
+# Screen capture: xcap provides cross-platform X11/Wayland/GDI/DXGI capture
+# base64 encodes the PNG buffer so it can be passed to the Node agent service
+# via a Tauri command and forwarded to Ollama llava as a data URL.
+xcap = "0.0.13"
+base64 = "0.22"
+image = { version = "0.25", default-features = false, features = ["png"] }
+# 贾维斯系统操控能力
+# enigo: 跨平台键鼠模拟（点击/键盘输入/启动程序）
+# notify: 跨平台文件监听（桌面新增/修改文件推送提醒）
+# windows: Win32 API 用于窗口枚举与控制（最小化/最大化/关闭指定软件）
+enigo = "0.2"
+notify = "6"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_Foundation",
+    "Win32_System_DataExchange",
+    "Win32_System_Memory",
+    "Win32_System_Ole",
+] }
+
+[lib]
+name = "rag_pet"
+path = "src/lib.rs"
 
 [[bin]]
 name = "rag-pet"

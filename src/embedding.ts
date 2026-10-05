@@ -1,6 +1,8 @@
 // BM25 text retrieval with lightweight Chinese tokenization.
 // This keeps the app fully local and avoids downloading embedding models.
 
+import { Embeddings } from '@langchain/core/embeddings'
+
 export interface DocumentStats {
   docCount: number
   avgDocLength: number
@@ -16,7 +18,7 @@ const STOP_WORDS = new Set([
   '着', '看', '好', '这', '他', '她', '它', '们', '那',
 ])
 
-function tokenize(text: string): string[] {
+export function tokenize(text: string): string[] {
   const tokens: string[] = []
   const normalized = text.toLowerCase().replace(/\s+/g, ' ')
   const chars = [...normalized]
@@ -44,6 +46,38 @@ function tokenize(text: string): string[] {
   }
 
   return tokens
+}
+
+const LOCAL_EMBEDDING_DIMENSIONS = 384
+
+/**
+ * Deterministic local embeddings for the LangChain retrieval pipeline.
+ * Feature hashing keeps documents private and requires no model download.
+ */
+export function embedTextLocally(text: string): number[] {
+  const vector = new Array<number>(LOCAL_EMBEDDING_DIMENSIONS).fill(0)
+  for (const token of tokenize(text)) {
+    let hash = 2166136261
+    for (let i = 0; i < token.length; i++) {
+      hash ^= token.charCodeAt(i)
+      hash = Math.imul(hash, 16777619)
+    }
+    vector[(hash >>> 0) % LOCAL_EMBEDDING_DIMENSIONS] += 1
+  }
+  const magnitude = Math.sqrt(vector.reduce((sum, value) => sum + value * value, 0)) || 1
+  return vector.map(value => value / magnitude)
+}
+
+export class LocalHashEmbeddings extends Embeddings {
+  constructor() { super({}) }
+
+  async embedDocuments(documents: string[]): Promise<number[][]> {
+    return documents.map(embedTextLocally)
+  }
+
+  async embedQuery(document: string): Promise<number[]> {
+    return embedTextLocally(document)
+  }
 }
 
 const K1 = 1.5

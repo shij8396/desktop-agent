@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-get-temperature-stats"
+description = "Enables the get_temperature_stats command without any pre-configured scope."
+commands.allow = ["get_temperature_stats"]
+
+[[permission]]
+identifier = "deny-get-temperature-stats"
+description = "Denies the get_temperature_stats command without any pre-configured scope."
+commands.deny = ["get_temperature_stats"]

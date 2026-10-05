@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-get-recent-alerts"
+description = "Enables the get_recent_alerts command without any pre-configured scope."
+commands.allow = ["get_recent_alerts"]
+
+[[permission]]
+identifier = "deny-get-recent-alerts"
+description = "Denies the get_recent_alerts command without any pre-configured scope."
+commands.deny = ["get_recent_alerts"]
