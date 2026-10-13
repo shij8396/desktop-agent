@@ -2,6 +2,14 @@
 
 A security-first desktop AI assistant built with Tauri, TypeScript, Hono, and LangChain.
 
+## Demo video / 面试演示
+
+[▶ Watch or download the real-operation demo (2026-10-13)](https://github.com/shij8396/desktop-agent/releases/tag/demo-video-20261013) · [演示内容与验证范围](docs/DEMO.md)
+
+[![Agent demo: file analysis and approval](docs/demo-20261013-preview.png)](https://github.com/shij8396/desktop-agent/releases/tag/demo-video-20261013)
+
+The recording shows the local development version completing file search, document analysis, approval, and Word creation. See the demo notes for the exact verification scope.
+
 ## Features
 
 - RAG chat over a local knowledge base
